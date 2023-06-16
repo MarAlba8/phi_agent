@@ -36,7 +36,6 @@ class Conscious:
             while True:
                 print("phi windows")
                 print(self._phi_windows)
-                sleep(1)
                 self.update_phis()
 
         thread = threading.Thread(target=show_current_thought)
@@ -45,13 +44,19 @@ class Conscious:
     def get_phis(self):
         return self._phi_windows
 
-    def update_phis(self):
-        states = self._phi_windows.keys()
-        for state in states:
-            new_thought = self._scopes[state].get_next_thought()
-            self._phi_windows[state] = new_thought
+    def update_phis(self, state=None, thought=None):
+        if thought and state:
+            self._phi_windows[state] = thought
+            ## TODO: call Memory
+        else:
+            states = self._phi_windows.keys()
+            for state in states:
+                new_thought = self._scopes[state].get_next_thought()
+                self._phi_windows[state] = new_thought
 
-        ##TODO: Update memory in hear?
+        sleep(1)
+
+        ##TODO: Update memory in
 
     def update_scope(self, state: str, thoughts: list):
         scope = self._scopes[state]
@@ -63,6 +68,8 @@ class Conscious:
             )
             if not has_thought:
                 scope.add_new_thought(thought=thought)
+
+            self.update_phis(state, thought)
 
     def is_a_repeated_thought(self, scope: Scope, thought: str):
         has_thought = scope.has_thought(thought=thought)

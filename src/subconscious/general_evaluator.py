@@ -1,20 +1,13 @@
-def general_evaluator(thoughts_by_sense: dict) -> dict:
-    # recibe new_thoughts
-    ## Se abre cada 200 ms
-    # touch, hearing, sight, smell, taste. body
-    ## TODO: Change this for a global variable with all the senses
-    senses = ["hearing", "touch", "sight", "smell", "taste", "body"]
-    states = ["biological", "cultural", "emotional"]
+from settings import SENSES, STATES
 
-    # states_new_thoughts = {
-    #     "biological": [],
-    #     "cultural": [],
-    #     "emotional": []
-    # }
+
+def general_evaluator(thoughts_by_sense: dict) -> dict:
+    senses = SENSES
+    states = STATES
+
     states_new_thoughts = {}
-    states_new_thoughts["biological"] = []
-    states_new_thoughts["cultural"] = []
-    states_new_thoughts["emotional"] = []
+    for state in states:
+        states_new_thoughts[state] = []
 
     for sense in senses:
         for state in states:

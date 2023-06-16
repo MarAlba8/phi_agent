@@ -25,7 +25,6 @@ class Scope(DescriptorQueue):
             return self.current.key
         return None
 
-
     def see_thoughts_in_scope(self):
         print(self.get_keys())
 
