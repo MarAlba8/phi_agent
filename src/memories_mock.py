@@ -80,11 +80,11 @@ CURRENT_EVENTS = {
 class Memory:
     def get_memories(self, bce_modified_by_senses: dict):
 
-        print(f"bce_modified_byb_sense: {bce_modified_by_senses}")
+        print(f"bce_modified_by_sense: {bce_modified_by_senses}")
         states = {
             "biological": 0,
-            "cultural": 1,
-            "emotional": 1,
+            "cultural": 0,
+            "emotional": 0,
         }
 
         memories = {}

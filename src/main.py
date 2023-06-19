@@ -43,8 +43,13 @@ if __name__ == '__main__':
 
         # memories for testing (Daniel)
         memory = Memory()
+
+        ## get_details -> Details for all senses
+        # details["hearing"] = {
+        #     "number_registers": 10,
+        #     "number_occurrences": 9,
+        # }
         memory_details = memory.get_details()
-        # memories = memory.memories
 
         bce_winners, bce_modified = mind.call_internal_comparator(
             agent_bce=agent_bce,
@@ -53,7 +58,15 @@ if __name__ == '__main__':
         )
         log.msg(f"bce winners: {bce_winners}, bce modified: {bce_modified}")
 
+        ## get_memories -> send a dict like this
+        # bce_modified = {
+        #     "biological": 0,
+        #     "cultural": 1,
+        #     "emotional": 1,
+        # }
+        ##
         memories = memory.get_memories(bce_modified_by_senses=bce_modified)
+
         temporal_memory = memory.get_current_temporal_memory()
         mind.update_attention(memories=memories, temporal_memory=temporal_memory)
 
