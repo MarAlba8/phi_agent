@@ -1,6 +1,7 @@
 from conscious.conscious import Conscious
 from utils.bce import BCE
 
+from phi_agent.src.settings import log
 from phi_agent.src.utils.fuzzy_logic import fuzzy_logic
 
 
@@ -12,18 +13,22 @@ class SubconsciousBySense:
         self.bce_winners = {}
         self.bce_modified = {}
 
-    def thought_picker(self, memories: dict):
+    def thought_picker(self, memories: dict, temporal_memory: dict):
         current_thoughts = self.conscious.get_phis()
-
-        ##TODO: Ask for memories to Daniel
-        ## sending self.states_modified
+        for state in current_thoughts:
+            if not current_thoughts[state]:
+                current_thoughts[state] = temporal_memory[state]
 
         new_thoughts = self.new_thought_selector(memories, current_thoughts, self.bce_modified)
         return new_thoughts
 
-    def bce_comparator(self, agent_bce: BCE, neuronal_network_bce: dict):
-        number_registers = 10
-        number_occurrences = 9
+    def bce_comparator(self, agent_bce: BCE, neuronal_network_bce: dict, memory_details: dict):
+        number_registers = memory_details.get("number_registers")
+        number_occurrences = memory_details.get("number_occurrences")
+
+        # log.msg(f"agent_bce: {agent_bce}")
+        # log.msg(f"neuronal_network_bce: {neuronal_network_bce}")
+
         for state in neuronal_network_bce.keys():
             rn_value = neuronal_network_bce[state]
             if state == "biological":
@@ -55,7 +60,7 @@ class SubconsciousBySense:
                 self.bce_winners[state] = agent_value
                 self.bce_modified[state] = 0
 
-        return self.bce_winners
+        return self.bce_winners, self.bce_modified
 
     # def primary_evaluator(self, agent_states: dict, new_states: dict):
     #     bce_modified = self.bce_modified
@@ -68,7 +73,12 @@ class SubconsciousBySense:
     #
     #     return bce_modified
 
-    def new_thought_selector(self, memories: dict, current_thoughts: dict, states_modified: dict):
+    def new_thought_selector(
+            self,
+            memories: dict,
+            current_thoughts: dict,
+            states_modified: dict,
+    ):
         """
         #Multiplexor
         Take memories and current thoughts, for those states that were modified by a memory
@@ -80,10 +90,11 @@ class SubconsciousBySense:
         :return: Descriptors of the new thoughts
         """
 
-        new_thoughts = {}
+        # new_thoughts = {}
         for state in current_thoughts:
-            if not current_thoughts[state]:
-                new_thoughts[state] = memories[state]
-            elif states_modified[state]:
-                new_thoughts[state] = memories[state]  # solo regresa los estados que se actualizaron
-        return new_thoughts
+            # if not current_thoughts[state]:
+            #     new_thoughts[state] = memories[state]
+            # elif states_modified[state]:
+            if states_modified[state]:
+                current_thoughts[state] = memories[state]  # solo regresa los estados que se actualizaron
+        return current_thoughts

@@ -1,4 +1,7 @@
 from mind.mind import Mind
+from phi_agent.src.memories_mock import Memory
+from phi_agent.src.settings import log
+from phi_agent.src.utils.need import Need
 from utils.utils import bce_agent_to_mind_translator
 from utils.bce import BCE
 
@@ -24,7 +27,7 @@ if __name__ == '__main__':
 
     # bce for testing (Michael)
     bce = BCE()
-    agent_bce = BCE()
+    agent_bce = BCE(need_bio=Need(1,2), need_emo=Need(0,0), need_cul=Need(0,3))
 
     for i in range(3):
 
@@ -37,56 +40,22 @@ if __name__ == '__main__':
                  [[0, bce], 'time']]
 
         rn_bce_by_senses = bce_agent_to_mind_translator(bce_senses=bce_7)
-        bce_winners = mind.call_internal_comparator(
-            agent_bce=agent_bce,
-            bce_senses=rn_bce_by_senses
-        )
 
         # memories for testing (Daniel)
-        # memory = Memory()
+        memory = Memory()
+        memory_details = memory.get_details()
         # memories = memory.memories
 
-        memories = {
-            'hearing': {
-                'biological': f"hearing:biological{i}",
-                'cultural': f"hearing:cultural{i}",
-                'emotional': f"hearing:emotiona{i}l"
-            },
-            'touch': {
-                'biological': "touch:biological",
-                'cultural': "touch:cultural",
-                'emotional': "touch:emotional"
-            },
-            'sight': {
-                'biological': f"sight:biological{i}",
-                'cultural': f"sight:cultural{i}",
-                'emotional': f"sight:emotional{i}"
-            },
-            'smell': {
-                'biological': f"smell:biological{i}",
-                'cultural': f"smell:cultural{i}",
-                'emotional': f"smell:emotional{i}"
-            },
-            'taste': {
-                'biological': f"taste:biological{i}",
-                'cultural': f"taste:cultural{i}",
-                'emotional': f"taste:emotional{i}"
-            },
-            'body': {
-                'biological': f"body:biological{i}",
-                'cultural': f"body:cultural{i}",
-                'emotional': f"body:emotional{i}"
-            },
-            'time': {
-                'biological': "body:biological",
-                'cultural': "body:cultural",
-                'emotional': "body:emotional"
-            }
-        }
+        bce_winners, bce_modified = mind.call_internal_comparator(
+            agent_bce=agent_bce,
+            bce_senses=rn_bce_by_senses,
+            memory_details=memory_details
+        )
+        log.msg(f"bce winners: {bce_winners}, bce modified: {bce_modified}")
 
-        mind.update_attention(memories=memories)
-
-        ##
+        memories = memory.get_memories(bce_modified_by_senses=bce_modified)
+        temporal_memory = memory.get_current_temporal_memory()
+        mind.update_attention(memories=memories, temporal_memory=temporal_memory)
 
         new_bce = mind.get_unified_bce(bce_by_senses=bce_winners)
         agent_bce = new_bce
