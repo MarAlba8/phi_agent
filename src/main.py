@@ -26,65 +26,68 @@ if __name__ == '__main__':
     bce = BCE()
     agent_bce = BCE()
 
-    bce_7 = [[[0, bce], 'sight'],
-             [[2, bce], 'hearing'],
-             [[0, bce], 'taste'],
-             [[2, bce], 'touch'],
-             [[0, bce], 'body'],
-             [[0, bce], 'smell'],
-             [[0, bce], 'time']]
+    for i in range(3):
 
-    rn_bce_by_senses = bce_agent_to_mind_translator(bce_senses=bce_7)
-    bce_winners = mind.call_internal_comparator(
-        agent_bce=agent_bce,
-        bce_senses=rn_bce_by_senses
-    )
+        bce_7 = [[[0, bce], 'sight'],
+                 [[2, bce], 'hearing'],
+                 [[0, bce], 'taste'],
+                 [[2, bce], 'touch'],
+                 [[0, bce], 'body'],
+                 [[0, bce], 'smell'],
+                 [[0, bce], 'time']]
 
-    # memories for testing (Daniel)
-    # memory = Memory()
-    # memories = memory.memories
+        rn_bce_by_senses = bce_agent_to_mind_translator(bce_senses=bce_7)
+        bce_winners = mind.call_internal_comparator(
+            agent_bce=agent_bce,
+            bce_senses=rn_bce_by_senses
+        )
 
-    memories = {
-        'hearing': {
-            'biological': "hearing:biological",
-            'cultural': "hearing:cultural",
-            'emotional': "hearing:emotional"
-        },
-        'touch': {
-            'biological': "touch:biological",
-            'cultural': "touch:cultural",
-            'emotional': "touch:emotional"
-        },
-        'sight': {
-            'biological': "sight:biological",
-            'cultural': "sight:cultural",
-            'emotional': "sight:emotional"
-        },
-        'smell': {
-            'biological': "smell:biological",
-            'cultural': "smell:cultural",
-            'emotional': "smell:emotional"
-        },
-        'taste': {
-            'biological': "taste:biological",
-            'cultural': "taste:cultural",
-            'emotional': "taste:emotional"
-        },
-        'body': {
-            'biological': "body:biological",
-            'cultural': "body:cultural",
-            'emotional': "body:emotional"
-        },
-        'time': {
-            'biological': "body:biological",
-            'cultural': "body:cultural",
-            'emotional': "body:emotional"
+        # memories for testing (Daniel)
+        # memory = Memory()
+        # memories = memory.memories
+
+        memories = {
+            'hearing': {
+                'biological': f"hearing:biological{i}",
+                'cultural': f"hearing:cultural{i}",
+                'emotional': f"hearing:emotiona{i}l"
+            },
+            'touch': {
+                'biological': "touch:biological",
+                'cultural': "touch:cultural",
+                'emotional': "touch:emotional"
+            },
+            'sight': {
+                'biological': f"sight:biological{i}",
+                'cultural': f"sight:cultural{i}",
+                'emotional': f"sight:emotional{i}"
+            },
+            'smell': {
+                'biological': f"smell:biological{i}",
+                'cultural': f"smell:cultural{i}",
+                'emotional': f"smell:emotional{i}"
+            },
+            'taste': {
+                'biological': f"taste:biological{i}",
+                'cultural': f"taste:cultural{i}",
+                'emotional': f"taste:emotional{i}"
+            },
+            'body': {
+                'biological': f"body:biological{i}",
+                'cultural': f"body:cultural{i}",
+                'emotional': f"body:emotional{i}"
+            },
+            'time': {
+                'biological': "body:biological",
+                'cultural': "body:cultural",
+                'emotional': "body:emotional"
+            }
         }
-    }
 
-    mind.update_attention(memories=memories)
+        mind.update_attention(memories=memories)
 
-    ##
+        ##
 
-    new_bce = mind.get_unified_bce(bce_by_senses=bce_winners)
-    print(f"-------------New BCE {new_bce} -------------")
+        new_bce = mind.get_unified_bce(bce_by_senses=bce_winners)
+        agent_bce = new_bce
+        print(f"-------------New BCE {new_bce} -------------")

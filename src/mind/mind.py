@@ -1,3 +1,5 @@
+from time import sleep
+
 from conscious.conscious import Conscious
 from subconscious.general_evaluator import general_evaluator
 from subconscious.general_evaluator_bce import general_evaluator_bce
@@ -43,20 +45,36 @@ class Mind:
         self.states_new_thoughts = general_evaluator(
             self.new_thoughts_by_sense
         )
-        #print(self.states_new_thoughts)
 
-        # update phi windows and scopes
-        for state in self.states_new_thoughts:
-            thoughts = self.states_new_thoughts[state]
+        ##version 2
+        # for state in self.states_new_thoughts:
+        len_biological = len(self.states_new_thoughts["biological"])
+        len_cultural= len(self.states_new_thoughts["cultural"])
+        len_emotional = len(self.states_new_thoughts["emotional"])
 
-            ##TODO: agregar un hilo por estado?
-            self.conscious.update_scope(state=state, thoughts=thoughts)
+        max_len_state_thoughts = max(len_biological, len_cultural, len_emotional)
+        for i in range(max_len_state_thoughts):
+            if i < len_biological:
+                thought = self.states_new_thoughts["biological"][i]
+                self.conscious.update_scope(state="biological", thought=thought)
+
+            if i < len_cultural:
+                thought = self.states_new_thoughts["cultural"][i]
+                self.conscious.update_scope(state="cultural", thought=thought)
+
+            if i < len_emotional:
+                thought = self.states_new_thoughts["emotional"][i]
+                self.conscious.update_scope(state="emotional", thought=thought)
+
+            sleep(1)
+
 
     def get_unified_bce(self, bce_by_senses: dict):
         unified_bce = general_evaluator_bce(
             bce_by_senses=bce_by_senses
         )
         return unified_bce
+
     #     self.send_thoughts_to_memory()
     #
     # def send_thoughts_to_memory(self):
